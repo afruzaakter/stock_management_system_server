@@ -13,5 +13,5 @@ app.get('/', (req, res) =>{
     res.send('Server is Running')
 });
 app.listen(port, () => {
-    console.log('Listening to port', port);
+    console.log('Store Management app Listening on port', port);
 })
