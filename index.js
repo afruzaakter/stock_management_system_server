@@ -19,11 +19,35 @@ async function run() {
         await client.connect();
         console.log("Yea, Database Connected");
         const employeeCollection = client.db("store_management").collection("employee");
+        const addInventoryCollection = client.db("store_management").collection("addInventory");
         const keyCollection = client.db("store_management").collection("key");
         const departmentCollection = client.db("store_management").collection("department");
         const designationCollection = client.db("store_management").collection("designation");
-    //--------------- key type start method--------------------
-      // ---------------key type post method--------------------
+
+
+        //============ Add Inventory =======================
+        app.post('/addInventory', async(req,res) =>{
+            const newInventory = req.body;
+            const result = await addInventoryCollection.insertOne(newInventory);
+            res.send(result);
+        })
+        
+        app.get("/addInventory", async(req, res)=>{
+          const addInventory = await addInventoryCollection.find().toArray();
+          res.send(addInventory)
+        })
+
+        app.delete('/addInventory/:id', async(req, res) =>{
+          const id = req.params.id;
+          const query = {_id: ObjectId(id)};
+          const addInventory = await addInventoryCollection.deleteOne(query);
+          res.send(addInventory)
+        })
+
+
+
+        //--------------- key type start method--------------------
+        // ---------------key type post method--------------------
         app.post('/key', async(req,res) =>{
             const newKey = req.body;
             const result = await keyCollection.insertOne(newKey);
@@ -35,9 +59,9 @@ async function run() {
         app.get("/key", async(req, res)=>{
             const key = await keyCollection.find().toArray();
             res.send(key)
-           })
+        })
      
-      // ---------------key type delete method--------------------
+        // ---------------key type delete method--------------------
       app.delete("/key/:id", async(req, res) =>{
         const id = req.params.id;
         const query = {_id: ObjectId(id)};
