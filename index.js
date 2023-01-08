@@ -4,6 +4,7 @@ const app = express();
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const { query } = require('express');
 
 const port = process.env.PORT || 5000;
 
@@ -23,6 +24,9 @@ async function run() {
         const keyCollection = client.db("store_management").collection("key");
         const departmentCollection = client.db("store_management").collection("department");
         const designationCollection = client.db("store_management").collection("designation");
+        const productKeyCollection = client.db("store_management").collection("productKey");
+    //--------------- key type start method--------------------
+      // ---------------key type post method--------------------
 
 
         //============ Add Inventory =======================
@@ -133,21 +137,20 @@ async function run() {
         const designation = await designationCollection.deleteOne(query);
         res.send(designation)
       })
-       // ---------------key type Update method--------------------
-    app.put('/designation/:id', async(req,res) =>{
+       // --------------designation Update method--------------------
+    app.put('/designation/:id', async(req, res) =>{
       const id = req.params.id;
-      const key = req.body;
+      const state = req.body;
       const filter = {_id: ObjectId(id)};
       const options = {upsert: true};
       const updateDoc = {
-        $set: {
-          key: key.key,
-        }
-      };
-      const result = await keyCollection.updateOne(filter, updateDoc, options);
+          $set: state,
+      }
+      const result = await designationCollection.updateOne(filter, updateDoc, options);
       res.send(result);
-    });
-    // ---------------key type Update show method--------------------
+    })
+
+    // ---------------designation Update show method--------------------
     app.get("/designation/:id", async(req, res) =>{
       const id = req.params.id;
       const query = {_id: ObjectId(id)};
@@ -156,6 +159,45 @@ async function run() {
     })
 
      //--------------- Designation end method--------------------  
+     //--------------- Product key  start method--------------------  
+     //--------------- Product key  post method--------------------  
+    app.post('/productkey', async(req,res) =>{
+      const newProductKey = req.body;
+      const result = await productKeyCollection.insertOne(newProductKey);
+      res.send(result);
+    });
+    //--------------- Product key  get method-------------------- 
+    app.get('/productkey', async(req, res)=>{
+      const productkey = await productKeyCollection.find().toArray();
+      res.send(productkey);
+    })
+    //--------------- Product key  delete method-------------------- 
+    app.delete('/productkey/:id', async(req,res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const productkey = await productKeyCollection.deleteOne(query);
+      res.send(productkey);
+    })
+     // ---------------Product key type Update show method--------------------
+     app.get("/productkey/:id", async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)};
+      const result = await productKeyCollection.findOne(query)
+      res.send(result);
+    })
+       // --------------- product key type Update method--------------------
+       app.put('/productkey/:id', async(req,res) =>{
+        const id = req.params.id;
+        const productkey = req.body;
+        const filter = {_id: ObjectId(id)};
+        const options = {upsert: true};
+        const updateDoc = {
+          $set: productkey,    
+        };
+        const result = await productKeyCollection.updateOne(filter, updateDoc, options);
+        res.send(result);
+      });
+     //--------------- Product key  end method--------------------  
 
 
     }
