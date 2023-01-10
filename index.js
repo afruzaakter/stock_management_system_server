@@ -25,6 +25,7 @@ async function run() {
     const departmentCollection = client.db("store_management").collection("department");
     const designationCollection = client.db("store_management").collection("designation");
     const productKeyCollection = client.db("store_management").collection("productKey");
+    const budgetCodeCollection= client.db("store_management").collection("budgetcode")
     //--------------- key type start method--------------------
     // ---------------key type post method--------------------
 
@@ -217,6 +218,65 @@ async function run() {
       res.send(result);
     });
     //--------------- Product key  end method--------------------  
+
+    //--------------- Budget Code  start --------------------  
+    //--------------- Budget Code post method --------------------  
+    app.post('/budgetcode', async(req, res) =>{
+      const newBudgetCode = req.body;
+      const result = await budgetCodeCollection.insertOne(newBudgetCode);
+      res.send(result)
+    })
+    //--------------- Budget Code get method --------------------  
+    app.get('/budgetcode', async(req, res) =>{
+      const budgetcode = await budgetCodeCollection.find().toArray();
+      res.send(budgetcode);
+    })
+    //--------------- Budget Code update method --------------------  
+    app.put('/budgetcode/:id', async(req, res) =>{
+      const id = req.params.id;
+      const budgetCode = req.body;
+      const filter = {_id: ObjectId(id)};
+      const options = {upsert: true};
+      const updateDoc={
+        $set:{
+          budgetCode: budgetCode.budgetCode,
+        }
+      };
+      const result = await budgetCodeCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    })
+
+
+    //  app.put('/key/:id', async (req, res) => {
+    //   const id = req.params.id;
+    //   const key = req.body;
+    //   const filter = { _id: ObjectId(id) };
+    //   const options = { upsert: true };
+    //   const updateDoc = {
+    //     $set: {
+    //       key: key.key,
+    //     }
+    //   };
+    //   const result = await keyCollection.updateOne(filter, updateDoc, options);
+    //   res.send(result);
+    // });
+    
+    //--------------- Budget Code delete method --------------------  
+    app.delete('/budgetcode/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const budgetcode = await budgetCodeCollection.deleteOne(query);
+      res.send(budgetcode);
+    })
+    //--------------- Budget Code update show method --------------------  
+  app.get('/budgetcode/:id', async(req, res) =>{
+    const id =req.params.id;
+    const query = {_id: ObjectId(id)}
+    const result = await budgetCodeCollection.findOne(query);
+    res.send(result);
+  })
+    //--------------- Budget Code  end --------------------  
+   
 
 
   }
