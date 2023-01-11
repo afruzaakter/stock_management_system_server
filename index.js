@@ -25,7 +25,8 @@ async function run() {
     const departmentCollection = client.db("store_management").collection("department");
     const designationCollection = client.db("store_management").collection("designation");
     const productKeyCollection = client.db("store_management").collection("productKey");
-    const budgetCodeCollection= client.db("store_management").collection("budgetcode")
+    const budgetCodeCollection= client.db("store_management").collection("budgetcode");
+    const productCollection= client.db("store_management").collection("product");
     //--------------- key type start method--------------------
     // ---------------key type post method--------------------
 
@@ -245,21 +246,6 @@ async function run() {
       const result = await budgetCodeCollection.updateOne(filter, updateDoc, options);
       res.send(result);
     })
-
-
-    //  app.put('/key/:id', async (req, res) => {
-    //   const id = req.params.id;
-    //   const key = req.body;
-    //   const filter = { _id: ObjectId(id) };
-    //   const options = { upsert: true };
-    //   const updateDoc = {
-    //     $set: {
-    //       key: key.key,
-    //     }
-    //   };
-    //   const result = await keyCollection.updateOne(filter, updateDoc, options);
-    //   res.send(result);
-    // });
     
     //--------------- Budget Code delete method --------------------  
     app.delete('/budgetcode/:id', async(req, res)=>{
@@ -275,7 +261,48 @@ async function run() {
     const result = await budgetCodeCollection.findOne(query);
     res.send(result);
   })
-    //--------------- Budget Code  end --------------------  
+    //--------------- Budget Code  end --------------------
+    
+    //--------------- Add Product  start --------------------  
+    //--------------- Product Post method--------------------  
+    app.post('/product', async(req, res)=>{
+      const newProduct = req.body;
+      const result = await productCollection.insertOne(newProduct);
+      res.send(result);
+    })
+    //--------------- Product Get method--------------------  
+    app.get('/product', async(req,res) =>{
+      const product = await productCollection.find().toArray();
+      res.send(product);
+    })
+    //--------------- Product Delete method-------------------- 
+    app.delete('/product/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const result = await productCollection.deleteOne(query);
+      res.send(result);
+    }) 
+    //--------------- Product Update/ put method--------------------  
+      app.put('/product/:id', async(req, res) =>{
+        const id = req.params.id;
+        const product = req.body;
+        const filter = {_id: ObjectId(id)};
+        const options = {upsert: true}
+        const updateDoc = {
+          $set : product,
+        }
+        const result = await productCollection.updateOne(filter, updateDoc, options);
+        res.send(result);
+      })
+    //--------------- Product Update data show  method--------------
+    app.get('/product/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const result = await productCollection.findOne(query);
+      res.send(result);
+    })
+
+    //--------------- Add Product  end --------------------  
    
 
 
