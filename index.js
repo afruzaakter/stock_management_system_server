@@ -19,8 +19,8 @@ async function run() {
   try {
     await client.connect();
     console.log("Yea, Database Connected");
-    const employeeCollection = client.db("store_management").collection("employee");
     const addInventoryCollection = client.db("store_management").collection("addInventory");
+    const employeeCollection = client.db("store_management").collection("employee");
     const keyCollection = client.db("store_management").collection("key");
     const departmentCollection = client.db("store_management").collection("department");
     const designationCollection = client.db("store_management").collection("designation");
@@ -49,7 +49,17 @@ async function run() {
       res.send(addInventory)
     })
 
+    // =============== Employee =========================
+    app.post('/employee', async (req, res) => {
+      const newEmployee = req.body;
+      const result = await employeeCollection.insertOne(newEmployee);
+      res.send(result);
+    })
 
+    app.get("/employee", async (req,res)=>{
+      const getEmployee= await employeeCollection.find().toArray();
+      res.send(getEmployee)
+    })
 
     //--------------- key type start method--------------------
     // ---------------key type post method--------------------
