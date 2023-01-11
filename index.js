@@ -61,9 +61,6 @@ async function run() {
       res.send(getEmployee)
     })
 
-
-
-
     //--------------- key type start method--------------------
     // ---------------key type post method--------------------
     app.post('/key', async (req, res) => {
