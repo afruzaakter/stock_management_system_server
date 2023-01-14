@@ -27,6 +27,7 @@ async function run() {
     const productKeyCollection = client.db("store_management").collection("productKey");
     const budgetCodeCollection= client.db("store_management").collection("budgetcode");
     const productCollection= client.db("store_management").collection("product");
+    const supplierCollection= client.db("store_management").collection("supplier");
     //--------------- key type start method--------------------
     // ---------------key type post method--------------------
 
@@ -313,6 +314,46 @@ async function run() {
     })
 
     //--------------- Add Product  end --------------------  
+    //--------------- Suppler  start --------------------  
+    //--------------- Suppler  Post method--------------------  
+    app.post('/supplier', async(req, res)=>{
+      const newSupplier = req.body;
+      const result = await supplierCollection.insertOne(newSupplier);
+      res.send(result);
+    })
+    //--------------- Suppler  Get method--------------------  
+    app.get('/supplier', async(req,res) =>{
+      const supplier = await supplierCollection.find().toArray();
+      res.send(supplier);
+    })
+    //--------------- Suppler Delete method-------------------- 
+    app.delete('/supplier/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const result = await supplierCollection.deleteOne(query);
+      res.send(result);
+    }) 
+    //---------------Suppler  Update/ put method--------------------  
+      app.put('/supplier/:id', async(req, res) =>{
+        const id = req.params.id;
+        const supplier = req.body;
+        const filter = {_id: ObjectId(id)};
+        const options = {upsert: true}
+        const updateDoc = {
+          $set : supplier,
+        }
+        const result = await supplierCollection.updateOne(filter, updateDoc, options);
+        res.send(result);
+      })
+    //--------------- Suppler  Update data show  method--------------
+    app.get('/supplier/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const result = await supplierCollection.findOne(query);
+      res.send(result);
+    })
+
+    //--------------- Suppler  end --------------------  
    
 
 
