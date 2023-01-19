@@ -29,6 +29,7 @@ async function run() {
     const budgetCodeCollection= client.db("store_management").collection("budgetcode");
     const productCollection= client.db("store_management").collection("product");
     const supplierCollection= client.db("store_management").collection("supplier");
+    const stockAdjustCollection= client.db("store_management").collection("stockadjust");
     //--------------- key type start method--------------------
     // ---------------key type post method--------------------
 
@@ -77,7 +78,7 @@ async function run() {
     })
 
 
-    //--------------- key type start method--------------------
+    //====================== key type start method ======================
     // ---------------key type post method--------------------
     app.post('/key', async (req, res) => {
       const newKey = req.body;
@@ -121,14 +122,15 @@ async function run() {
       res.send(result);
     })
 
-    //--------------- key type end method--------------------  
-    //--------------- Department start method--------------------  
+    
+    //====================== Department start method ======================
     //--------------- Department post method-----------------
     app.post('/department', async (req, res) => {
       const newDepartment = req.body;
       const result = await departmentCollection.insertOne(newDepartment);
       res.send(result)
     })
+
     //-------------- Department put/update data Entry method  ---------------------
     app.put('/department/:id', async (req, res) => {
       const id = req.params.id;
@@ -141,6 +143,7 @@ async function run() {
       const result = await departmentCollection.updateOne(filter, updateDoc, options);
       res.send(result);
     })
+
     //   ----------------------Department Update data show method-------------
   app.get('/department/:id', async(req, res) =>{
     const id = req.params.id;
@@ -148,11 +151,13 @@ async function run() {
     const result = await departmentCollection.findOne(query);
     res.send(result);
   })
+
     //--------------- Department get method-----------------
     app.get('/department', async (req, res) => {
       const department = await departmentCollection.find().toArray();
       res.send(department)
     })
+
     //--------------- Department get method-----------------
     app.delete('/department/:id', async (req, res) => {
       const id = req.params.id;
@@ -162,9 +167,9 @@ async function run() {
     })
 
 
-    //--------------- Department end method--------------------  
+   
 
-    //--------------- Designation start method--------------------  
+    //====================== Designation start method ======================
     //--------------- Designation post method-----------------
     app.post('/designation', async (req, res) => {
       const newDesignation = req.body;
@@ -204,8 +209,8 @@ async function run() {
       res.send(result);
     })
 
-    //--------------- Designation end method--------------------  
-    //--------------- Product key  start method--------------------  
+  
+    //====================== Product key  start method ======================
     //--------------- Product key  post method--------------------  
     app.post('/productkey', async (req, res) => {
       const newProductKey = req.body;
@@ -243,9 +248,9 @@ async function run() {
       const result = await productKeyCollection.updateOne(filter, updateDoc, options);
       res.send(result);
     });
-    //--------------- Product key  end method--------------------  
+   
 
-    //--------------- Budget Code  start --------------------  
+     //====================== Budget Code  start ======================
     //--------------- Budget Code post method --------------------  
     app.post('/budgetcode', async(req, res) =>{
       const newBudgetCode = req.body;
@@ -286,9 +291,9 @@ async function run() {
     const result = await budgetCodeCollection.findOne(query);
     res.send(result);
   })
-    //--------------- Budget Code  end --------------------
+   
     
-    //--------------- Add Product  start --------------------  
+    //====================== Add Product  start ====================== 
     //--------------- Product Post method--------------------  
     app.post('/product', async(req, res)=>{
       const newProduct = req.body;
@@ -327,8 +332,8 @@ async function run() {
       res.send(result);
     })
 
-    //--------------- Add Product  end --------------------  
-    //--------------- Suppler  start --------------------  
+   
+    //====================== Suppler  start ====================== 
     //--------------- Suppler  Post method--------------------  
     app.post('/supplier', async(req, res)=>{
       const newSupplier = req.body;
@@ -367,7 +372,47 @@ async function run() {
       res.send(result);
     })
 
-    //--------------- Suppler  end --------------------  
+   
+    //====================== Stock Adjust start ======================= 
+    //--------------- Stock Adjust  Post method--------------------  
+    app.post('/stockadjust', async(req, res)=>{
+      const newSupplier = req.body;
+      const result = await stockAdjustCollection.insertOne(newSupplier);
+      res.send(result);
+    })
+    //--------------- Stock Adjust  Get method--------------------  
+    app.get('/stockadjust', async(req,res) =>{
+      const stockadjust = await stockAdjustCollection.find().toArray();
+      res.send(stockadjust);
+    })
+    //--------------- Stock Adjust Delete method-------------------- 
+    app.delete('/stockadjust/:id', async(req, res)=>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const result = await stockAdjustCollection.deleteOne(query);
+      res.send(result);
+    }) 
+    //---------------Stock Adjust  Update/ put method--------------------  
+      app.put('/stockadjust/:id', async(req, res) =>{
+        const id = req.params.id;
+        const stockadjust = req.body;
+        const filter = {_id: ObjectId(id)};
+        const options = {upsert: true}
+        const updateDoc = {
+          $set : stockadjust,
+        }
+        const result = await stockAdjustCollection.updateOne(filter, updateDoc, options);
+        res.send(result);
+      })
+    //--------------- Stock Adjust  Update data show  method--------------
+    app.get('/stockadjust/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const result = await stockAdjustCollection.findOne(query);
+      res.send(result);
+    })
+
+   
    
 
 
