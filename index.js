@@ -62,6 +62,14 @@ async function run() {
       res.send({result, token});
     })
 
+    // get all user from DB and show UI
+    app.get('/allUsers', async(req,res)=>{
+      const users= await allUsersCollection.find().toArray();
+      res.send(users);
+
+    })
+
+  
     // ====================== \\  All User End  //===================
 
 
@@ -72,7 +80,7 @@ async function run() {
       res.send(result);
     })
 
-    app.get("/addInventory", verifyJWT, async (req, res) => {
+    app.get("/addInventory",verifyJWT,  async (req, res) => {
       const addInventory = await addInventoryCollection.find().toArray();
       res.send(addInventory)
     })
