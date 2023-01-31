@@ -15,6 +15,21 @@ app.use(express.json())
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.feqszmo.mongodb.net/?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
+function verifyJWT(req, res,next){
+  const authHeader= req.headers.authorization;
+  if(!authHeader){
+    return res.status(401).send({message: 'UnAuthorized Access'})
+  }
+  const token=authHeader.split(' ')[1];
+  jwt.verify(token, process.env.ACCESS_TOKEN , function(err, decoded) {
+    if(err){
+      return res.status(403).send({message: 'Forbidden Access'})
+    }
+    req.decoded=decoded;
+    next();
+  });
+}
+
 async function run() {
   try {
     await client.connect();
@@ -30,8 +45,32 @@ async function run() {
     const productCollection= client.db("store_management").collection("product");
     const supplierCollection= client.db("store_management").collection("supplier");
     const stockAdjustCollection= client.db("store_management").collection("stockadjust");
-    //--------------- key type start method--------------------
-    // ---------------key type post method--------------------
+    const allUsersCollection= client.db("store_management").collection("allUsers");
+    
+    // ====================== // All User start \\===================
+
+    app.put('/allUsers/:email', async(req,res)=>{
+      const email=req.params.email;
+      const user=req.body;
+      const filter={email:email};
+      const options={upsert: true};
+      const updateDoc={
+        $set:user,
+      };
+      const result= await allUsersCollection.updateOne(filter,updateDoc,options);
+      const token=jwt.sign({email:email}, process.env.ACCESS_TOKEN , { expiresIn: '1h' })
+      res.send({result, token});
+    })
+
+    // get all user from DB and show UI
+    app.get('/allUsers', async(req,res)=>{
+      const users= await allUsersCollection.find().toArray();
+      res.send(users);
+
+    })
+
+  
+    // ====================== \\  All User End  //===================
 
 
     //============ Add Inventory =======================
@@ -41,7 +80,7 @@ async function run() {
       res.send(result);
     })
 
-    app.get("/addInventory", async (req, res) => {
+    app.get("/addInventory",verifyJWT,  async (req, res) => {
       const addInventory = await addInventoryCollection.find().toArray();
       res.send(addInventory)
     })
