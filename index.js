@@ -68,8 +68,31 @@ async function run() {
       res.send(users);
 
     })
+    //============== Admin role put method =======================
+    // app.put('/user/admin/:email', async(req, res)=>{
+    //   const email = req.params.email;
+    //   const filter = {email: email};
+    //   const updateDoc = {
+    //     $set: {role:"admin"},
+    //   };
+    //   const result = await allUsersCollection.updateOne(filter, updateDoc);
+    //   res.send(result);
+    // })
 
-  
+      //============== Admin role get method =======================
+      app.get('/admin/:email',async(req,res)=>{
+        const email = req.params.email;
+        const user = await userCollection.findOne({email: email});
+        const isAdmin = user.userRole === 'Role_Admin';
+        res.send({admin: isAdmin});        
+      })
+      //============== Admin role get method =======================
+      app.get('/approve/:email',async(req,res)=>{
+        const email = req.params.email;
+        const user = await userCollection.findOne({email: email});
+        const isApprove = user.userRole === 'Role_Approve';
+        res.send({approve: isApprove});        
+      })
     // ====================== \\  All User End  //===================
 
 
