@@ -34,6 +34,7 @@ async function run() {
   try {
     await client.connect();
     console.log("Yea, Database Connected");
+    const createRequisitionCollection = client.db("store_management").collection("createRequisition");
     const addInventoryCollection = client.db("store_management").collection("addInventory");
     const employeeCollection = client.db("store_management").collection("employee");
     const userCollection = client.db("store_management").collection("user");
@@ -94,6 +95,17 @@ async function run() {
         res.send({approve: isApprove});        
       })
     // ====================== \\  All User End  //===================
+
+    // =========== Requisition Part ===================
+    app.post('/createRequisition', async (req, res) => {
+      const requisition = req.body;
+      const result = await createRequisitionCollection.insertOne(requisition);
+      res.send(result);
+    })
+    app.get("/createRequisition",  async (req, res) => {
+      const requisition = await createRequisitionCollection.find().toArray();
+      res.send(requisition)
+    })
 
 
     //============ Add Inventory =======================
