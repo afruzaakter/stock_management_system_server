@@ -103,9 +103,23 @@ async function run() {
       const result = await createRequisitionCollection.insertOne(requisition);
       res.send(result);
     })
+<<<<<<< HEAD
     app.get("/createRequisition", async (req, res) => {
+=======
+
+    // Get All Requisition Requisition
+    app.get("/createRequisition",  async (req, res) => {
+>>>>>>> e597155196d72e0fdf9a1e90d5f3964e59e7cb56
       const requisition = await createRequisitionCollection.find().toArray();
-      res.send(requisition)
+      res.send(requisition);
+    })
+
+    // Requisition Preview   
+    app.get('/createRequisition/:id', async(req, res) =>{
+      const id = req.params.id;
+      const query = {_id: ObjectId(id)}
+      const findPreviewData = await createRequisitionCollection.findOne(query);
+      res.send(findPreviewData);
     })
 
 
