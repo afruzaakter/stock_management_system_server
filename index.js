@@ -81,20 +81,21 @@ async function run() {
     //   res.send(result);
     // })
 
-    //============== Admin role get method =======================
-    app.get('/admin/:email', async (req, res) => {
-      const email = req.params.email;
-      const user = await userCollection.findOne({ email: email });
-      const isAdmin = user.userRole === 'Role_Admin';
-      res.send({ admin: isAdmin });
-    })
-    //============== Admin role get method =======================
-    app.get('/approve/:email', async (req, res) => {
-      const email = req.params.email;
-      const user = await userCollection.findOne({ email: email });
-      const isApprove = user.userRole === 'Role_Approve';
-      res.send({ approve: isApprove });
-    })
+    // //============== Admin role get method =======================
+    // app.get('/admin/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const user = await userCollection.findOne({ email: email });
+    //   const isAdmin = user.userRole === 'Role_Admin';
+    //   res.send({ admin: isAdmin });
+    // })
+    // //============== Admin role get method =======================
+    // app.get('/approve/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const user = await userCollection.findOne({ email: email });
+    //   const isApprove = user.userRole === 'Role_Approve';
+    //   res.send({ approve: isApprove });
+    // })
+    
     // ====================== \\  All User End  //===================
 
     // =========== Requisition Part ===================
@@ -103,13 +104,9 @@ async function run() {
       const result = await createRequisitionCollection.insertOne(requisition);
       res.send(result);
     })
-<<<<<<< HEAD
-    app.get("/createRequisition", async (req, res) => {
-=======
 
     // Get All Requisition Requisition
     app.get("/createRequisition",  async (req, res) => {
->>>>>>> e597155196d72e0fdf9a1e90d5f3964e59e7cb56
       const requisition = await createRequisitionCollection.find().toArray();
       res.send(requisition);
     })
@@ -456,7 +453,6 @@ async function run() {
       const result = await productCollection.findOne(query);
       res.send(result);
     })
-
 
     //====================== Suppler  start ====================== 
     //--------------- Suppler  Post method--------------------  
