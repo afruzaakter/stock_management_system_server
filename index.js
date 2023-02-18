@@ -81,20 +81,21 @@ async function run() {
     //   res.send(result);
     // })
 
-    //============== Admin role get method =======================
-    app.get('/admin/:email', async (req, res) => {
-      const email = req.params.email;
-      const user = await userCollection.findOne({ email: email });
-      const isAdmin = user.userRole === 'Role_Admin';
-      res.send({ admin: isAdmin });
-    })
-    //============== Admin role get method =======================
-    app.get('/approve/:email', async (req, res) => {
-      const email = req.params.email;
-      const user = await userCollection.findOne({ email: email });
-      const isApprove = user.userRole === 'Role_Approve';
-      res.send({ approve: isApprove });
-    })
+    // //============== Admin role get method =======================
+    // app.get('/admin/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const user = await userCollection.findOne({ email: email });
+    //   const isAdmin = user.userRole === 'Role_Admin';
+    //   res.send({ admin: isAdmin });
+    // })
+    // //============== Admin role get method =======================
+    // app.get('/approve/:email', async (req, res) => {
+    //   const email = req.params.email;
+    //   const user = await userCollection.findOne({ email: email });
+    //   const isApprove = user.userRole === 'Role_Approve';
+    //   res.send({ approve: isApprove });
+    // })
+    
     // ====================== \\  All User End  //===================
 
     // =========== Requisition Part ===================
@@ -452,7 +453,7 @@ async function run() {
       const result = await productCollection.findOne(query);
       res.send(result);
     })
-    
+
     //====================== Suppler  start ====================== 
     //--------------- Suppler  Post method--------------------  
     app.post('/supplier', async (req, res) => {
