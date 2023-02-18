@@ -103,13 +103,9 @@ async function run() {
       const result = await createRequisitionCollection.insertOne(requisition);
       res.send(result);
     })
-<<<<<<< HEAD
-    app.get("/createRequisition", async (req, res) => {
-=======
 
     // Get All Requisition Requisition
     app.get("/createRequisition",  async (req, res) => {
->>>>>>> e597155196d72e0fdf9a1e90d5f3964e59e7cb56
       const requisition = await createRequisitionCollection.find().toArray();
       res.send(requisition);
     })
@@ -456,8 +452,7 @@ async function run() {
       const result = await productCollection.findOne(query);
       res.send(result);
     })
-
-
+    
     //====================== Suppler  start ====================== 
     //--------------- Suppler  Post method--------------------  
     app.post('/supplier', async (req, res) => {
