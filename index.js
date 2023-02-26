@@ -46,12 +46,12 @@ async function run() {
     const productCollection = client.db("store_management").collection("product");
     const supplierCollection = client.db("store_management").collection("supplier");
     const stockAdjustCollection = client.db("store_management").collection("stockadjust");
-    const allUsersCollection = client.db("store_management").collection("allUsers");
+    // const allUsersCollection = client.db("store_management").collection("allUsers");
 
 
     // ====================== // All User start \\===================
 
-    app.put('/allUsers/:email', async (req, res) => {
+    app.put('/user/:email', async (req, res) => {
       const email = req.params.email;
       const user = req.body;
       const filter = { email: email };
@@ -59,41 +59,179 @@ async function run() {
       const updateDoc = {
         $set: user,
       };
-      const result = await allUsersCollection.updateOne(filter, updateDoc, options);
-      const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN, { expiresIn: '1h' })
-      res.send({ result, token });
+      const result = await userCollection.updateOne(filter, updateDoc, options);
+      // const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN, { expiresIn: '1h' })
+      // res.send({ result, token });
+      res.send(result);
     })
 
     // get all user from DB and show UI
-    app.get('/allUsers', async (req, res) => {
-      const users = await allUsersCollection.find().toArray();
-      res.send(users);
+    // app.get('/user', async (req, res) => {
+    //   const users = await userCollection.find().toArray();
+    //   res.send(users);
 
-    })
-    //============== Admin role put method =======================
-    // app.put('/user/admin/:email', async(req, res)=>{
-    //   const email = req.params.email;
-    //   const filter = {email: email};
-    //   const updateDoc = {
-    //     $set: {role:"admin"},
-    //   };
-    //   const result = await allUsersCollection.updateOne(filter, updateDoc);
-    //   res.send(result);
     // })
 
+    // ================= User Management ====================
+    app.post('/user', async (req, res) => {
+      const newUser = req.body;
+      const result = await userCollection.insertOne(newUser);
+      res.send(result);
+    })
+
+    app.get("/user", async (req, res) => {
+      const result = await userCollection.find().toArray();
+      res.send(result)
+    })
+
+    app.delete('/user/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const userDelete = await userCollection.deleteOne(query);
+      res.send(userDelete)
+    })
+
+    // update/put method--
+    app.patch('/user/:id', async (req, res) => {
+      const id = req.params.id;
+      const user = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: user,
+      }
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+
+    // user update data show in the from field 
+    app.get('/user/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) }
+      const result = await userCollection.findOne(query);
+      res.send(result);
+    })
+
+    //============== Admin role put method =======================
+    app.put('/user/admin/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { userRole: "Role_Admin" },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+
     //============== Admin role get method =======================
+
     app.get('/admin/:email', async (req, res) => {
       const email = req.params.email;
       const user = await userCollection.findOne({ email: email });
       const isAdmin = user.userRole === 'Role_Admin';
       res.send({ admin: isAdmin });
     })
-    //============== Admin role get method =======================
+
+    //============== Approve role put method ======================
+
+    app.put('/user/approve/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { userRole: "Role_Approve" },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+    //============== Approve role get method =======================
+
     app.get('/approve/:email', async (req, res) => {
       const email = req.params.email;
       const user = await userCollection.findOne({ email: email });
       const isApprove = user.userRole === 'Role_Approve';
       res.send({ approve: isApprove });
+    })
+
+    //============== Inventory role put method =======================
+
+    app.put('/user/inventory/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { userRole: "Role_Inventory" },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+
+    //============== Inventory role get method =======================
+
+    app.get('/inventory/:email', async (req, res) => {
+      const email = req.params.email;
+      const user = await userCollection.findOne({ email: email });
+      const isInventory = user.userRole === 'Role_Inventory';
+      res.send({ inventory: isInventory });
+    })
+
+    //============== Authorization role put method =======================
+
+    app.put('/user/authorization/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { userRole: "Role_Authorization" },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+
+    //============== Authorization role get method =======================
+
+    app.get('/authorization/:email', async (req, res) => {
+      const email = req.params.email;
+      const user = await userCollection.findOne({ email: email });
+      const isAuthorization = user.userRole === 'Role_Authorization';
+      res.send({ authorization: isAuthorization });
+    })
+
+    //============== Store role put method =======================
+
+    app.put('/user/store/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { userRole: "Role_Store" },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+
+    //============== Store role get method =======================
+
+    app.get('/store/:email', async (req, res) => {
+      const email = req.params.email;
+      const user = await userCollection.findOne({ email: email });
+      const isStore = user.userRole === 'Role_Store';
+      res.send({ store: isStore });
+    })
+
+    //============== User role put method =======================
+
+    app.put('/user/roleUser/:email', async (req, res) => {
+      const email = req.params.email;
+      const filter = { email: email };
+      const updateDoc = {
+        $set: { userRole: "Role_User" },
+      };
+      const result = await userCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
+    //============== User role get method =======================
+
+    app.get('/roleUser/:email', async (req, res) => {
+      const email = req.params.email;
+      const user = await userCollection.findOne({ email: email });
+      const isUser = user.userRole === 'Role_User';
+      res.send({ user: isUser });
     })
     // ====================== \\  All User End  //===================
 
@@ -103,21 +241,18 @@ async function run() {
       const result = await createRequisitionCollection.insertOne(requisition);
       res.send(result);
     })
-<<<<<<< HEAD
-    app.get("/createRequisition", async (req, res) => {
-=======
+
 
     // Get All Requisition Requisition
-    app.get("/createRequisition",  async (req, res) => {
->>>>>>> e597155196d72e0fdf9a1e90d5f3964e59e7cb56
+    app.get("/createRequisition", async (req, res) => {
       const requisition = await createRequisitionCollection.find().toArray();
       res.send(requisition);
     })
 
     // Requisition Preview   
-    app.get('/createRequisition/:id', async(req, res) =>{
+    app.get('/createRequisition/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id: ObjectId(id)}
+      const query = { _id: ObjectId(id) }
       const findPreviewData = await createRequisitionCollection.findOne(query);
       res.send(findPreviewData);
     })
@@ -163,45 +298,6 @@ async function run() {
       res.send(getEmployee)
     })
 
-    // ================= User Management ====================
-    app.post('/user', async (req, res) => {
-      const newUser = req.body;
-      const result = await userCollection.insertOne(newUser);
-      res.send(result);
-    })
-
-    app.get("/user", async (req, res) => {
-      const result = await userCollection.find().toArray();
-      res.send(result)
-    })
-
-    app.delete('/user/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) };
-      const userDelete = await userCollection.deleteOne(query);
-      res.send(userDelete)
-    })
-
-    // update/put method--
-    app.put('/user/:id', async (req, res) => {
-      const id = req.params.id;
-      const user = req.body;
-      const filter = { _id: ObjectId(id) };
-      const options = { upsert: true };
-      const updateDoc = {
-        $set: user,
-      }
-      const result = await userCollection.updateOne(filter, updateDoc, options);
-      res.send(result);
-    })
-
-    // user update data show in the from field 
-    app.get('/user/:id', async (req, res) => {
-      const id = req.params.id;
-      const query = { _id: ObjectId(id) }
-      const result = await userCollection.findOne(query);
-      res.send(result);
-    })
 
     //===================== key type start method============
     // ---------------key type post method--------------------
