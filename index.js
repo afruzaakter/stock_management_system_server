@@ -72,7 +72,6 @@ async function run() {
 
     // })
 
-<<<<<<< HEAD
     // ================= User Management ====================
     app.post('/user', async (req, res) => {
       const newUser = req.body;
@@ -234,23 +233,6 @@ async function run() {
       const isUser = user.userRole === 'Role_User';
       res.send({ user: isUser });
     })
-=======
-    // //============== Admin role get method =======================
-    // app.get('/admin/:email', async (req, res) => {
-    //   const email = req.params.email;
-    //   const user = await userCollection.findOne({ email: email });
-    //   const isAdmin = user.userRole === 'Role_Admin';
-    //   res.send({ admin: isAdmin });
-    // })
-    // //============== Admin role get method =======================
-    // app.get('/approve/:email', async (req, res) => {
-    //   const email = req.params.email;
-    //   const user = await userCollection.findOne({ email: email });
-    //   const isApprove = user.userRole === 'Role_Approve';
-    //   res.send({ approve: isApprove });
-    // })
-    
->>>>>>> 8ab01b32a29332c185db94925e80540be1e67ede
     // ====================== \\  All User End  //===================
 
     // =========== Requisition Part ===================
@@ -259,16 +241,10 @@ async function run() {
       const result = await createRequisitionCollection.insertOne(requisition);
       res.send(result);
     })
-<<<<<<< HEAD
 
 
     // Get All Requisition Requisition
     app.get("/createRequisition", async (req, res) => {
-=======
-
-    // Get All Requisition Requisition
-    app.get("/createRequisition",  async (req, res) => {
->>>>>>> 8ab01b32a29332c185db94925e80540be1e67ede
       const requisition = await createRequisitionCollection.find().toArray();
       res.send(requisition);
     })
