@@ -265,6 +265,17 @@ async function run() {
       res.send(result)
     })
 
+    // update/put method for All Preview Requisition -------------------  
+    app.patch('/createRequisition/:id', async (req, res) => {
+      const id = req.params.id;
+      const requisition = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: requisition,
+      }
+      const result = await createRequisitionCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    })
 
     //============ Add Inventory =======================
     app.post('/addInventory', async (req, res) => {
