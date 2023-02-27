@@ -256,15 +256,25 @@ async function run() {
       const findPreviewData = await createRequisitionCollection.findOne(query);
       res.send(findPreviewData);
     })
-
-
-
-    // Requisition Preview   
-    app.get('/createRequisition/:id', async (req, res) => {
+    
+    // Requisition delete
+    app.delete('/createRequisition/:id', async (req, res) => {
       const id = req.params.id;
-      const query = { _id: ObjectId(id) }
-      const findPreviewData = await createRequisitionCollection.findOne(query);
-      res.send(findPreviewData);
+      const query = { _id: ObjectId(id) };
+      const result = await createRequisitionCollection.deleteOne(query);
+      res.send(result)
+    })
+
+    // update/put method for All Preview Requisition -------------------  
+    app.patch('/createRequisition/:id', async (req, res) => {
+      const id = req.params.id;
+      const requisition = req.body;
+      const filter = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: requisition,
+      }
+      const result = await createRequisitionCollection.updateOne(filter, updateDoc);
+      res.send(result);
     })
 
     //============ Add Inventory =======================
