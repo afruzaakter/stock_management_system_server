@@ -32,7 +32,7 @@ function verifyJWT(req, res, next) {
 
 async function run() {
   try {
-    await client.connect();
+     client.connect();
     console.log("Yea, Database Connected");
     const createRequisitionCollection = client.db("store_management").collection("createRequisition");
     const addInventoryCollection = client.db("store_management").collection("addInventory");
